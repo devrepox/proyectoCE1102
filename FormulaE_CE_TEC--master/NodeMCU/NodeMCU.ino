@@ -75,11 +75,11 @@ const long interval = 100;
  * In3 = 1 ∧ In4 = 0 -> Gira hacia la derecha
  */
 #define EnA D4 // 
-#define In1 D3 // D4 en HIGH : retroceder
+#define In1 D3 // D4 en HIGH : retroceder #MOTOR TRASERO
 #define In2 D2 // D3 en HIGH : avanzar
-#define In3 D1 // 
-#define EnB D0 // 
-#define In4 D5 // 0 para ir hacia adelante
+#define In3 D1 // #Motor Trasero
+#define In4 D0 // 0 para ir hacia adelante
+#define EnB D5 // 
 
 
 
