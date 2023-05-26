@@ -242,7 +242,7 @@ void procesar(String input, String * output){
      Serial.print("Comando CIRCLE");
       digitalWrite(In1, LOW);
       digitalWrite(In2, HIGH);
-      analogWrite(EnA, 255); 
+      analogWrite(EnA, 250); 
       delay(2000);
       *output = "Ha ejecutado Prende";
      } 
@@ -250,7 +250,7 @@ void procesar(String input, String * output){
      Serial.print("Comando CIRCLE");
       digitalWrite(In1, LOW);
       digitalWrite(In2, LOW);
-      analogWrite(EnA, HIGH);
+      analogWrite(EnA, 0);
       delay(2000);
       *output = "Ha ejecutado Prende";
      }
