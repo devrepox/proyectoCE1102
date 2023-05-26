@@ -258,7 +258,7 @@ void procesar(String input, String * output){
      Serial.print("Comando_DER");
       digitalWrite(In3, LOW);
       digitalWrite(In4, HIGH);
-      analogWrite(EnB, 255);
+      analogWrite(EnB, 250);
       delay(1000);
       analogWrite(EnB, 0);
       *output = "Ha ejecutado Derecha";
