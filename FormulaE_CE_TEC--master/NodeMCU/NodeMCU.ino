@@ -110,8 +110,8 @@ void setup() {
   pinMode(ldr,INPUT);
 
   // ip estática para el servidor
-  IPAddress ip(192,168,43,200);
-  IPAddress gateway(192,168,43,1);
+  IPAddress ip(192,168,133,22);
+  IPAddress gateway(192,168,133,213);
   IPAddress subnet(255,255,255,0);
 
   WiFi.config(ip, gateway, subnet);
@@ -234,6 +234,35 @@ void procesar(String input, String * output){
      *  
      * } 
      */
+     else if (comando == "CIRCLE") {
+     Serial.print("Comando CIRCLE");
+      *output = "Ha ejecutado circle";
+     } 
+     else if (comando == "Prende") {
+     Serial.print("Comando CIRCLE");
+      digitalWrite(In1, LOW);
+      digitalWrite(In2, HIGH);
+      analogWrite(EnA, 255); 
+      delay(2000);
+      *output = "Ha ejecutado Prende";
+     } 
+     else if (comando == "Apaga") {
+     Serial.print("Comando CIRCLE");
+      digitalWrite(In1, LOW);
+      digitalWrite(In2, LOW);
+      analogWrite(EnA, HIGH);
+      delay(2000);
+      *output = "Ha ejecutado Prende";
+     }
+     else if (comando == "Der") {
+     Serial.print("Comando_DER");
+      digitalWrite(In3, LOW);
+      digitalWrite(In4, HIGH);
+      analogWrite(EnB, 255);
+      delay(1000);
+      analogWrite(EnB, 0);
+      *output = "Ha ejecutado Derecha";
+     }
     else{
       Serial.print("Comando no reconocido. Solo presenta llave");
       *output = "Undefined key value: " + comando+";";
