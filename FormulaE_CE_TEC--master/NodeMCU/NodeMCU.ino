@@ -110,8 +110,8 @@ void setup() {
   pinMode(ldr,INPUT);
 
   // ip estática para el servidor
-  IPAddress ip(192,168,133,22);
-  IPAddress gateway(192,168,133,213);
+  IPAddress ip(192,168,23,22);
+  IPAddress gateway(192,168,23,226);
   IPAddress subnet(255,255,255,0);
 
   WiFi.config(ip, gateway, subnet);
@@ -239,29 +239,55 @@ void procesar(String input, String * output){
       *output = "Ha ejecutado circle";
      } 
      else if (comando == "Prende") {
-     Serial.print("Comando CIRCLE");
+     Serial.print("Comando Prende");
       digitalWrite(In1, LOW);
       digitalWrite(In2, HIGH);
+      shiftOut(ab,clk,LSBFIRST,B11110011);
       analogWrite(EnA, 250); 
-      delay(2000);
+      delay(1000);
+      analogWrite(EnA, 200); 
+      shiftOut(ab,clk,LSBFIRST,B11001111);
+      delay(1000);
+      shiftOut(ab,clk,LSBFIRST,B00110011);
+      analogWrite(EnA, 170);
+      delay(1000);
+      shiftOut(ab,clk,LSBFIRST,B11111111);
+      analogWrite(EnA, 120);  
+      delay(1000);
+      shiftOut(ab,clk,LSBFIRST,B00110011);
+      analogWrite(EnA, 80); 
+      delay(1000);
+      shiftOut(ab,clk,LSBFIRST,B11001100);
+      analogWrite(EnA, 30); 
+      delay(1000);
+      shiftOut(ab,clk,LSBFIRST,B000000);
+      analogWrite(EnA, 0); 
+
       *output = "Ha ejecutado Prende";
      } 
-     else if (comando == "Apaga") {
-     Serial.print("Comando CIRCLE");
+     else if (comando == "a") {
+     Serial.print("Comando_Apaga");
       digitalWrite(In1, LOW);
       digitalWrite(In2, LOW);
-      analogWrite(EnA, 0);
-      delay(2000);
-      *output = "Ha ejecutado Prende";
+      digitalWrite(In3, LOW);
+      digitalWrite(In4, LOW);
+      *output = "Ha ejecutado Apaga";
      }
-     else if (comando == "Der") {
-     Serial.print("Comando_DER");
+     else if (comando == "Direc") {
+     Serial.print("Comando_Direc");
+      *output = "Ha ejecutado Derecha";
       digitalWrite(In3, LOW);
       digitalWrite(In4, HIGH);
-      analogWrite(EnB, 250);
-      delay(1000);
+      analogWrite(EnB, 256); 
+      delay(3000);
+      analogWrite(EnB, -1023); 
+      /*digitalWrite(In3, HIGH);
+      digitalWrite(In4, LOW); */
+      delay(3000);
+      /*digitalWrite(In3, LOW);
+      digitalWrite(In4, LOW);*/
       analogWrite(EnB, 0);
-      *output = "Ha ejecutado Derecha";
+      
      }
     else{
       Serial.print("Comando no reconocido. Solo presenta llave");
