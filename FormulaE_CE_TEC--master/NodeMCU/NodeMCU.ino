@@ -277,16 +277,19 @@ void procesar(String input, String * output){
      Serial.print("Comando_Direc");
       *output = "Ha ejecutado Derecha";
       digitalWrite(In3, LOW);
-      digitalWrite(In4, HIGH);
-      analogWrite(EnB, 256); 
+      digitalWrite(In4, HIGH); 
       delay(3000);
-      analogWrite(EnB, -1023); 
-      /*digitalWrite(In3, HIGH);
-      digitalWrite(In4, LOW); */
+      digitalWrite(In3, LOW);
+      digitalWrite(In4, HIGH);  
       delay(3000);
-      /*digitalWrite(In3, LOW);
-      digitalWrite(In4, LOW);*/
-      analogWrite(EnB, 0);
+      digitalWrite(In3, HIGH);
+      digitalWrite(In4, LOW);
+      delay(3000);
+      digitalWrite(In3, HIGH);
+      digitalWrite(In4, LOW);
+      delay(3000);
+      digitalWrite(In3, LOW);
+      digitalWrite(In4, LOW);
       
      }
     else{
