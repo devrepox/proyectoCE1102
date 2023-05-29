@@ -240,8 +240,8 @@ void procesar(String input, String * output){
      } 
      else if (comando == "Prende") {
      Serial.print("Comando Prende");
-      digitalWrite(In1, LOW);
-      digitalWrite(In2, HIGH);
+      digitalWrite(In1, HIGH);
+      digitalWrite(In2, LOW);
       shiftOut(ab,clk,LSBFIRST,B11110011);
       analogWrite(EnA, 250); 
       delay(1000);
