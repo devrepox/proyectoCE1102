@@ -277,7 +277,7 @@ void procesar(String input, String * output){
      } 
      //Para ir atras
      else if (comando=="Atras"){
-      Serial.print("Comando Atras")
+      Serial.print("Comando Atras");
       *output="Ha ejecutada Atras";
       digitalWrite(In1,LOW);
       digitalWrite(In2,HIGH);
@@ -285,7 +285,7 @@ void procesar(String input, String * output){
      }
      //para ir para adelante
      else if (comando=="Adelante"){
-      Serial.print("Comando Atras")
+      Serial.print("Comando Atras");
       *output="Ha ejecutada Atras";
       digitalWrite(In1,HIGH);
       digitalWrite(In2,LOW);
