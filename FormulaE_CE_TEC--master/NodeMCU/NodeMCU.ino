@@ -265,6 +265,13 @@ void procesar(String input, String * output){
 
       *output = "Ha ejecutado Prende";
      } 
+     else if (comando=="Atras"){
+      Serial.print("Comando Atras")
+      *output="Ha ejecutada Atras";
+      digitalWrite(In1,LOW);
+      digitalWrite(In2,HIGH);
+      analogWrite(EnA,250);
+     }
      else if (comando == "a") {
      Serial.print("Comando_Apaga");
       digitalWrite(In1, LOW);
@@ -291,6 +298,20 @@ void procesar(String input, String * output){
       digitalWrite(In3, LOW);
       digitalWrite(In4, LOW);
       
+     }
+     else if (comando=="Izq"){
+      Serial.print("Comando Izquierda");
+      *output = "Ha ejecutado Izquierda";
+      digitalWrite(In3,HIGH);
+      digitalWrite(In4,LOW);
+     }
+     else if (comando=="Encender"){
+      *output="Ha ejecutado Encender";
+      shiftOut(ab,clk,LSBFIRST,B11110011);
+     }
+     else if(comando =="Apagar"){
+      *output="Ha ejecutado Apagar";
+      shiftOut(ab,clk,LSBFIRST,B00000000);
      }
     else{
       Serial.print("Comando no reconocido. Solo presenta llave");
