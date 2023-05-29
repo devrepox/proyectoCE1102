@@ -339,6 +339,7 @@ void procesar(String input, String * output){
       *output="Ha ejecutado Encender leds";
       shiftOut(ab,clk,LSBFIRST,B00000000);
      }
+     //apaga las luces
      else if(comando =="ledsoff"){
       *output="Ha ejecutado Apagar luces";
       shiftOut(ab,clk,LSBFIRST,B11111111);
