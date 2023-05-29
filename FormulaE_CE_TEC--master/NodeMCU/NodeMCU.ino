@@ -1,15 +1,18 @@
 /*
- * Instituto TecnolÃ³gico de Costa Rica
+ * Instituto Tecnologico de Costa Rica
  * Computer Engineering
- * Taller de ProgramaciÃ³n
+ * Taller de Programacion
  * 
  * Código Servidor
  * Implementación del servidor NodeMCU
  * Proyecto 2, semestre 1
- * 2019
+ * 2022
  * 
- * Profesor: Milton Villegas Lemus
- * Autor: Santiago Gamboa RamÃ­rez
+ * Profesor:  Luis Barboza
+  Estudiantes: Jose Barquero y Alexander Montero
+
+ * Adaptacion/modificación del codigo de: Santiago Gamboa RamÃ­rez
+  el cuál se nos dio por GitHub
  * 
  * Restricciónes: Biblioteca ESP8266WiFi instalada
  */
@@ -110,7 +113,11 @@ void setup() {
   pinMode(ldr,INPUT);
 
   // ip estática para el servidor
-  IPAddress ip(192,168,23,22);
+  ///ATENCION!!!!!!///
+
+  // ESTA DIRECCIÓN DEBE CAMBIARSE DE ACUERDO AL HOSTPOT AL MOMENTO DE QUERER CONECTAR EL MCU
+
+  IPAddress ip(192,168,23,22); //VARIABLE DE ACUERDO AL HOSTPOT
   IPAddress gateway(192,168,23,226);
   IPAddress subnet(255,255,255,0);
 
@@ -234,10 +241,13 @@ void procesar(String input, String * output){
      *  
      * } 
      */
+     //Futuro comando a emplear para dibujar un circulo
      else if (comando == "CIRCLE") {
      Serial.print("Comando CIRCLE");
       *output = "Ha ejecutado circle";
      } 
+
+    //Prende: este comando pone a prueba el motor trasero en varias velocidadades, además va encendiendo distintas luces
      else if (comando == "Prende") {
      Serial.print("Comando Prende");
       digitalWrite(In1, HIGH);
@@ -265,6 +275,7 @@ void procesar(String input, String * output){
 
       *output = "Ha ejecutado Prende";
      } 
+     //Para ir atras
      else if (comando=="Atras"){
       Serial.print("Comando Atras")
       *output="Ha ejecutada Atras";
@@ -272,46 +283,65 @@ void procesar(String input, String * output){
       digitalWrite(In2,HIGH);
       analogWrite(EnA,250);
      }
+     //para ir para adelante
+     else if (comando=="Adelante"){
+      Serial.print("Comando Atras")
+      *output="Ha ejecutada Atras";
+      digitalWrite(In1,HIGH);
+      digitalWrite(In2,LOW);
+      analogWrite(EnA,250);
+     }
+     //un comando para apagar rapidamente los motores
      else if (comando == "a") {
      Serial.print("Comando_Apaga");
       digitalWrite(In1, LOW);
       digitalWrite(In2, LOW);
       digitalWrite(In3, LOW);
       digitalWrite(In4, LOW);
-      *output = "Ha ejecutado Apaga";
+      *output = "Ha ejecutado Apaga rapido";
      }
+     //Direc prueba ambas direcciones
      else if (comando == "Direc") {
      Serial.print("Comando_Direc");
-      *output = "Ha ejecutado Derecha";
+      *output = "Ha ejecutado Direc";
       digitalWrite(In3, LOW);
       digitalWrite(In4, HIGH); 
-      delay(3000);
+      delay(1000);
       digitalWrite(In3, LOW);
       digitalWrite(In4, HIGH);  
-      delay(3000);
+      delay(1000);
       digitalWrite(In3, HIGH);
       digitalWrite(In4, LOW);
-      delay(3000);
+      delay(1000);
       digitalWrite(In3, HIGH);
       digitalWrite(In4, LOW);
-      delay(3000);
+      delay(1000);
       digitalWrite(In3, LOW);
       digitalWrite(In4, LOW);
       
      }
+     //Para mover a la izquierda
      else if (comando=="Izq"){
       Serial.print("Comando Izquierda");
       *output = "Ha ejecutado Izquierda";
       digitalWrite(In3,HIGH);
       digitalWrite(In4,LOW);
      }
-     else if (comando=="Encender"){
-      *output="Ha ejecutado Encender";
-      shiftOut(ab,clk,LSBFIRST,B11110011);
+     //Para mover a la derecha
+     else if (comando=="Der"){
+      Serial.print("Comando derecha");
+      *output = "Ha ejecutado derecha";
+      digitalWrite(In3,LOW);
+      digitalWrite(In4,HIGH);
      }
-     else if(comando =="Apagar"){
-      *output="Ha ejecutado Apagar";
+     //Enciende las luces
+     else if (comando=="ledson"){
+      *output="Ha ejecutado Encender leds";
       shiftOut(ab,clk,LSBFIRST,B00000000);
+     }
+     else if(comando =="ledsoff"){
+      *output="Ha ejecutado Apagar luces";
+      shiftOut(ab,clk,LSBFIRST,B11111111);
      }
     else{
       Serial.print("Comando no reconocido. Solo presenta llave");
