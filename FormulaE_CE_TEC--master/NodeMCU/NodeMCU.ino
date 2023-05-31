@@ -117,8 +117,8 @@ void setup() {
 
   // ESTA DIRECCIÓN DEBE CAMBIARSE DE ACUERDO AL HOSTPOT AL MOMENTO DE QUERER CONECTAR EL MCU
 
-  IPAddress ip(192,168,23,22); //VARIABLE DE ACUERDO AL HOSTPOT
-  IPAddress gateway(192,168,23,226);
+  IPAddress ip(192,168,94,22); //VARIABLE DE ACUERDO AL HOSTPOT
+  IPAddress gateway(192,168,94,147);
   IPAddress subnet(255,255,255,0);
 
   WiFi.config(ip, gateway, subnet);
