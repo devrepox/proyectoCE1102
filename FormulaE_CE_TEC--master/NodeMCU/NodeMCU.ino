@@ -117,8 +117,8 @@ void setup() {
 
   // ESTA DIRECCIÓN DEBE CAMBIARSE DE ACUERDO AL HOSTPOT AL MOMENTO DE QUERER CONECTAR EL MCU
 
-  IPAddress ip(192,168,94,22); //VARIABLE DE ACUERDO AL HOSTPOT
-  IPAddress gateway(192,168,94,147);
+  IPAddress ip(192,168,43,22); //VARIABLE DE ACUERDO AL HOSTPOT
+  IPAddress gateway(192,168,43,147);
   IPAddress subnet(255,255,255,0);
 
   WiFi.config(ip, gateway, subnet);
@@ -397,6 +397,7 @@ String implementar(String llave, String valor){
       case 'b':
         Serial.println("Luces traseras");
         //# AGREGAR CÓDIGO PARA ENCENDER O APAGAR LUCES TRASERAS
+        print("Luces traseras");
         break;
       case 'l':
         Serial.println("Luces izquierda");
