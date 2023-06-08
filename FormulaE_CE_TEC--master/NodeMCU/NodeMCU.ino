@@ -19,9 +19,9 @@
 #include <ESP8266WiFi.h>
 
 //Cantidad maxima de clientes es 1
-#define MAX_SRV_CLIENTS 1
+#define MAX_SRV_CLIENTS 10
 //Puerto por el que escucha el servidor
-#define PORT 7070
+#define PORT 8266
 
 /*
  * ssid: Nombre de la Red a la que se va a conectar el Arduino
@@ -117,11 +117,11 @@ void setup() {
 
   // ESTA DIRECCIÓN DEBE CAMBIARSE DE ACUERDO AL HOSTPOT AL MOMENTO DE QUERER CONECTAR EL MCU
 
-  IPAddress ip(192,168,100,25); //VARIABLE DE ACUERDO AL HOSTPOT
-  IPAddress gateway(192,168,43,57);
+  /*IPAddress ip(192,168,100,25); //VARIABLE DE ACUERDO AL HOSTPOT
+  IPAddress gateway(192,168,100,1);
   IPAddress subnet(255,255,255,0);
 
-  WiFi.config(ip, gateway, subnet);
+  WiFi.config(ip, gateway, subnet)*/;
 
   // Modo para conectarse a la red
   WiFi.mode(WIFI_STA);
@@ -397,7 +397,6 @@ String implementar(String llave, String valor){
       case 'b':
         Serial.println("Luces traseras");
         //# AGREGAR CÓDIGO PARA ENCENDER O APAGAR LUCES TRASERAS
-        Serial.print("Luces traseras");
         break;
       case 'l':
         Serial.println("Luces izquierda");
