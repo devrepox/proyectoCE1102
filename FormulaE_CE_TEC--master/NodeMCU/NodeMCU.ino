@@ -398,7 +398,7 @@ String implementar(String llave, String valor){
       case 'f':
         Serial.println("Luces frontales");
         //# AGREGAR CÓDIGO PARA ENCENDER LUCES FRONTALES
-        data = B00000000;
+        data = B11110000;
         break;
       case 'b':
         Serial.println("Luces traseras");
