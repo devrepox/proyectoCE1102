@@ -344,6 +344,11 @@ void procesar(String input, String * output){
       *output="Ha ejecutado Apagar luces";
       shiftOut(ab,clk,LSBFIRST,B11111111);
      }
+     else if(comando=="bateria"){
+      *output="Ha ejecutado bateria"
+      *output="analogRead(A0)"
+
+     }
     else{
       Serial.print("Comando no reconocido. Solo presenta llave");
       *output = "Undefined key value: " + comando+";";
