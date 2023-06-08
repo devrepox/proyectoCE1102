@@ -345,9 +345,9 @@ void procesar(String input, String * output){
       shiftOut(ab,clk,LSBFIRST,B11111111);
      }
      else if(comando=="bateria"){
-      *output="Ha ejecutado bateria"
-      *output="analogRead(A0)"
-
+      *output="Ha ejecutado bateria";
+      x=analogRead(A0);
+      Serial.print(x);
      }
     else{
       Serial.print("Comando no reconocido. Solo presenta llave");
