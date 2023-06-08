@@ -346,7 +346,7 @@ void procesar(String input, String * output){
      }
      else if(comando=="bateria"){
       *output="Ha ejecutado bateria";
-      x=analogRead(A0);
+      float x=analogRead(A0);
       Serial.print(x);
      }
     else{
