@@ -84,6 +84,7 @@ const long interval = 100;
 #define In4 D0 // 0 para ir hacia adelante
 #define EnB D5 // 
 
+#define PINA0 A0
 
 /**
  * Variables
@@ -110,6 +111,7 @@ void setup() {
   pinMode(ab,OUTPUT);
   
   pinMode(ldr,INPUT);
+  pinMode(PINA0,INPUT);
 
   // ip estática para el servidor
   ///ATENCION!!!!!!///
@@ -242,13 +244,86 @@ void procesar(String input, String * output){
      */
      //Futuro comando a emplear para dibujar un circulo
      else if (comando == "CIRCLE") {
-     Serial.print("Comando CIRCLE");
       *output = "Ha ejecutado circle";
+      int i=0;
+      digitalWrite(In1, HIGH);
+      digitalWrite(In2, LOW);
+      analogWrite(EnA,150);
+      delay(500);
+      analogWrite(EnA,130);
+      digitalWrite(In3, LOW);
+      digitalWrite(In4, HIGH);
+      delay(25000);
+      analogWrite(EnA,0);
+
+     } 
+     else if (comando == "ZIGZAG") {
+      *output = "Ha ejecutado circle";
+      digitalWrite(In1, HIGH);
+      digitalWrite(In2, LOW);
+      analogWrite(EnA,150);
+      delay(500);
+      analogWrite(EnA,130);
+      digitalWrite(In3, HIGH);
+      digitalWrite(In4, LOW);
+      delay(1000);
+      digitalWrite(In3, LOW);
+      digitalWrite(In4, HIGH);
+      delay(1500);
+      digitalWrite(In3, HIGH);
+      digitalWrite(In4, LOW);
+      delay(1500);
+      digitalWrite(In3, LOW);
+      digitalWrite(In4, HIGH);
+      delay(1500);
+      digitalWrite(In3, LOW);
+      digitalWrite(In4, LOW);
+      analogWrite(EnA,0);
+      
+
+     } 
+     else if (comando == "ESPECIAL") {
+      *output = "Ha ejecutado especial";
+      digitalWrite(In1, HIGH);
+      digitalWrite(In2, LOW);
+      analogWrite(EnA,150);
+      delay(750);
+      analogWrite(EnA,130);
+      digitalWrite(In3, LOW);
+      digitalWrite(In4, HIGH);
+      delay(2000);
+      analogWrite(EnA,0);
+      digitalWrite(In3, HIGH);
+      digitalWrite(In4, LOW);
+      delay(500);
+      digitalWrite(In1, LOW);
+      digitalWrite(In2, HIGH);
+      analogWrite(EnA,150);
+      delay(2000);
+      analogWrite(EnA,0);
+      digitalWrite(In1, HIGH);
+      digitalWrite(In2, LOW);
+      delay(500);
+      analogWrite(EnA,150);
+      delay(750);
+      analogWrite(EnA,130);
+      digitalWrite(In3, HIGH);
+      digitalWrite(In4, LOW);
+      delay(750);
+      digitalWrite(In3,LOW);
+      digitalWrite(In4,LOW);
+      delay(1000);
+      analogWrite(EnA,0);
+      
+
      } 
      //Enciende las luces
      else if (comando=="ledson"){
       *output="Ha ejecutado Encender leds";
       shiftOut(ab,clk,LSBFIRST,B00000000);
+     }
+     else if (comando=="a"){
+      analogWrite(EnA,0);
      }
      //apaga las luces
      else if(comando =="ledsoff"){
@@ -388,10 +463,10 @@ String implementar(String llave, String valor){
       case 'b':
         switch (valor.toInt()){
           case 1:
-            dataLeds=dataLeds|B11000000;
+            dataLeds=dataLeds|B00100000;
             break;
           case 0:
-            dataLeds=dataLeds & B00111111;
+            dataLeds=dataLeds & B11011111;
             break;
           };
         break;
@@ -400,10 +475,10 @@ String implementar(String llave, String valor){
         //# AGREGAR CÓDIGO PARA ENCENDER O APAGAR DIRECCIONAL IZQUIERDA
         switch (valor.toInt()){
           case 1:
-            dataLeds=dataLeds|B00100000;
+            dataLeds=dataLeds|B10000000;
             break;
           case 0:
-            dataLeds=dataLeds & B11011111;
+            dataLeds=dataLeds & B01111111;
             break;
           };
         break;
@@ -412,10 +487,10 @@ String implementar(String llave, String valor){
         //# AGREGAR PARA CÓDIGO PARA ENCENDER O APAGAR DIRECCIONAL DERECHA
         switch (valor.toInt()){
           case 1:
-            dataLeds=dataLeds|B00010000;
+            dataLeds=dataLeds|B01000000;
             break;
           case 0:
-            dataLeds=dataLeds & B11101111;
+            dataLeds=dataLeds & B01111111;
             break;
           };
         break;
@@ -446,13 +521,24 @@ String implementar(String llave, String valor){
  */
 String getSense(){
   //# EDITAR CÓDIGO PARA LEER LOS VALORES DESEADOS
-  int batteryLvl = -1;
-  int light = -1;
+  float batteryLvl = 0.0;
+  long light = 0;
+  float bateria=0.0;
+  float voltaje=0.0;
+
+  bateria=analogRead(PINA0);
+  voltaje=(6*bateria/700);
+  batteryLvl=((voltaje/6)*100);
+
+  long luz=0;
+  luz=analogRead(ldr);
+  light=map(luz,1023,0,0,100);
+  
 
   // EQUIVALENTE A UTILIZAR STR.FORMAT EN PYTHON, %d -> valor decimal
-  char sense [16];
-  sprintf(sense, "blvl:%d;ldr:%d;", batteryLvl, light);
+  char sense [24];
+  sprintf(sense, "blvl: %.2f'%' ;ldr: %.2f'%';", batteryLvl, light);
   Serial.print("Sensing: ");
   Serial.println(sense);
-  return sense;
+  return String(luz);
 }

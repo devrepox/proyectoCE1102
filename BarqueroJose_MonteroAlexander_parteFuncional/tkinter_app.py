@@ -8,7 +8,9 @@ from PIL import Image
 from WiFiClient import NodeMCU
 
 class main():
+    '''Clase principal para la ventana del interfaz de usuario, la cual contiene botones y textos'''
     def __init__(self,master):
+        '''Método constructor para la creación de la ventana'''
         #Motor
         self.motor=0
 
@@ -97,11 +99,21 @@ class main():
         self.ledsALLOFF.place(x=150,y=400)
 
         #%Bateria
-        self.WidgetBatery = CTkButton(self.canvas, text="Bateria",command=self.indicadorSB,width=125,height=125,fg_color=self.ledsOff[2], hover=FALSE, image=self.batIcon,compound=TOP)
+        self.WidgetBatery = CTkButton(self.canvas, text="Bateria",command=lambda:send("sense;"),width=125,height=125,fg_color=self.ledsOff[2], hover=FALSE, image=self.batIcon,compound=TOP)
         self.WidgetBatery.place(x=150,y=500)
         #%Luz
-        self.WidgetFotoResistencia = CTkButton(self.canvas, text="Ind Luz",command=self.indicadorSL,width=125,height=125,fg_color=self.ledsOff[2], hover=FALSE, image=self.ResIcon,compound=TOP)
+        self.WidgetFotoResistencia = CTkButton(self.canvas, text="Ind Luz",command=lambda:send("sense;"),width=125,height=125,fg_color=self.ledsOff[2], hover=FALSE, image=self.ResIcon,compound=TOP)
         self.WidgetFotoResistencia.place(x=25,y=500)
+
+        #Botones de movimientos especiales
+        self.CIRB = CTkButton(self.canvas, text="CIRCLE",text_color="#DCEDFF",font=('CTkDefaultFont',24),width=250,height=50,fg_color="#292726", hover=FALSE,compound=RIGHT,command=lambda:send("CIRCLE;"))
+        self.CIRB.place(x=800,y=200)
+        self.INFB = CTkButton(self.canvas, text="INFINITY",text_color="#DCEDFF",font=('CTkDefaultFont',24),width=250,height=50,fg_color="#292726", hover=FALSE,compound=RIGHT,command=lambda:send("INFINITY;"))
+        self.INFB.place(x=800,y=270)
+        self.ZIGB = CTkButton(self.canvas, text="ZIG-ZAG",text_color="#DCEDFF",font=('CTkDefaultFont',24),width=250,height=50,fg_color="#292726", hover=FALSE,compound=RIGHT,command=lambda:send("ZIGZAG;"))
+        self.ZIGB.place(x=800,y=340)
+        self.ESPB = CTkButton(self.canvas, text="ESPECIAL",text_color="#DCEDFF",font=('CTkDefaultFont',24),width=250,height=50,fg_color="#292726", hover=FALSE,compound=RIGHT,command=lambda:send("ESPECIAL;"))
+        self.ESPB.place(x=800,y=410)
           
           #Circulo
           #Reccorido infinito
@@ -110,6 +122,7 @@ class main():
     
     #Funciones de los botones
     def ledSF(self):
+        '''Función que enciende o apaga los LEDs frontales según el status anterior'''
         if self.ledsBotton[0]==0:
             self.ledsBotton[0]=1
             self.ledsFront.configure(fg_color=self.ledsOn[0])
@@ -121,6 +134,7 @@ class main():
             self.ledsFront.configure(image=self.ledsIco[0])
             send("lf:0;")
     def ledSB(self):
+        '''Función que enciende o apaga los LEDs traseros según el status anterior'''
         if self.ledsBotton[1]==0:
             self.ledsBotton[1]=1
 
@@ -134,6 +148,7 @@ class main():
             self.ledsRear.configure(image=self.ledsIco[0])
             send("lb:0;")
     def ledSDI(self):
+        '''Función que enciende o apaga los LEDs de la direccional izquierda según el status anterior'''
         if self.ledsBotton[2]==0:
             self.ledsBotton[2]=1
             self.ledsDI.configure(fg_color=self.ledsOn[2])
@@ -145,6 +160,7 @@ class main():
             self.ledsDI.configure(image=self.dirIco[2])
             send("ll:0;")
     def ledSDD(self):
+        '''Función que enciende o apaga los LEDs de la direccional derecha según el status anterior'''
         if self.ledsBotton[3]==0:
             self.ledsBotton[3]=1
             self.ledsDD.configure(fg_color=self.ledsOn[2])
@@ -155,22 +171,23 @@ class main():
             self.ledsDD.configure(fg_color=self.ledsOff[2])
             self.ledsDD.configure(image=self.dirIco[0])
             send("lr:10;")
-    def indicadorSB(self):
-        pass
-    def indicadorSL(self):
-        print("indicador luz")
     def setMarcha(self,v):
+        '''Función que se comunica con el archivo de Arduino cambiando el valor pwm del motor trasero, además cambia el valor del cuadro de marcha'''
         self.MarchaSelect.configure(text=str(v))
         self.pwmv=v*self.motor
         print(str(self.pwmv))
         send("pwm:"+str(self.pwmv)+";")
     def setDirection(self,d,v):
+        '''Función que modifica el atributo self.motor y el cuadro de dirección actual'''
         self.SelectDir.configure(text=str(d))
         self.motor=v
         
     def doblar(self,v):
+        '''Función que hace un send que envia los valores -1,0,1'''
         send("dir:"+str(v)+";")
+
     def updateLog(self,msg):
+        '''Función que actualiza el cuadro que muestra el log'''
         self.logSpace.configure(text=str(msg))
         
         
@@ -218,5 +235,5 @@ Window=CTk()
 ventana_principal=main(Window)
 Window.title("Ezquisoneta")
 Window.minsize(1100,650)
-Window.bind('<Return>', send) #Vinculando tecla Enter a la función send
+Window.bind('<Return>', send("a;")) #Vinculando tecla Enter a la función send
 Window.mainloop()
