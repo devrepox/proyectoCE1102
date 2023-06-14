@@ -85,7 +85,6 @@ const long interval = 100;
 #define EnB D5 // 
 
 
-
 /**
  * Variables
  */
@@ -246,94 +245,6 @@ void procesar(String input, String * output){
      Serial.print("Comando CIRCLE");
       *output = "Ha ejecutado circle";
      } 
-
-    //Prende: este comando pone a prueba el motor trasero en varias velocidadades, además va encendiendo distintas luces
-     else if (comando == "Prende") {
-     Serial.print("Comando Prende");
-      digitalWrite(In1, HIGH);
-      digitalWrite(In2, LOW);
-      shiftOut(ab,clk,LSBFIRST,B11110011);
-      analogWrite(EnA, 250); 
-      delay(1000);
-      analogWrite(EnA, 200); 
-      shiftOut(ab,clk,LSBFIRST,B11001111);
-      delay(1000);
-      shiftOut(ab,clk,LSBFIRST,B00110011);
-      analogWrite(EnA, 170);
-      delay(1000);
-      shiftOut(ab,clk,LSBFIRST,B11111111);
-      analogWrite(EnA, 120);  
-      delay(1000);
-      shiftOut(ab,clk,LSBFIRST,B00110011);
-      analogWrite(EnA, 80); 
-      delay(1000);
-      shiftOut(ab,clk,LSBFIRST,B11001100);
-      analogWrite(EnA, 30); 
-      delay(1000);
-      shiftOut(ab,clk,LSBFIRST,B000000);
-      analogWrite(EnA, 0); 
-
-      *output = "Ha ejecutado Prende";
-     } 
-     //Para ir atras
-     else if (comando=="Atras"){
-      Serial.print("Comando Atras");
-      *output="Ha ejecutada Atras";
-      digitalWrite(In1,LOW);
-      digitalWrite(In2,HIGH);
-      analogWrite(EnA,250);
-     }
-     //para ir para adelante
-     else if (comando=="Adelante"){
-      Serial.print("Comando Atras");
-      *output="Ha ejecutada Atras";
-      digitalWrite(In1,HIGH);
-      digitalWrite(In2,LOW);
-      analogWrite(EnA,250);
-     }
-     //un comando para apagar rapidamente los motores
-     else if (comando == "a") {
-     Serial.print("Comando_Apaga");
-      digitalWrite(In1, LOW);
-      digitalWrite(In2, LOW);
-      digitalWrite(In3, LOW);
-      digitalWrite(In4, LOW);
-      *output = "Ha ejecutado Apaga rapido";
-     }
-     //Direc prueba ambas direcciones
-     else if (comando == "Direc") {
-     Serial.print("Comando_Direc");
-      *output = "Ha ejecutado Direc";
-      digitalWrite(In3, LOW);
-      digitalWrite(In4, HIGH); 
-      delay(1000);
-      digitalWrite(In3, LOW);
-      digitalWrite(In4, HIGH);  
-      delay(1000);
-      digitalWrite(In3, HIGH);
-      digitalWrite(In4, LOW);
-      delay(1000);
-      digitalWrite(In3, HIGH);
-      digitalWrite(In4, LOW);
-      delay(1000);
-      digitalWrite(In3, LOW);
-      digitalWrite(In4, LOW);
-      
-     }
-     //Para mover a la izquierda
-     else if (comando=="Izq"){
-      Serial.print("Comando Izquierda");
-      *output = "Ha ejecutado Izquierda";
-      digitalWrite(In3,HIGH);
-      digitalWrite(In4,LOW);
-     }
-     //Para mover a la derecha
-     else if (comando=="Der"){
-      Serial.print("Comando derecha");
-      *output = "Ha ejecutado derecha";
-      digitalWrite(In3,LOW);
-      digitalWrite(In4,HIGH);
-     }
      //Enciende las luces
      else if (comando=="ledson"){
       *output="Ha ejecutado Encender leds";
@@ -358,6 +269,7 @@ void procesar(String input, String * output){
   }
 }
 byte dataLeds=B00000000;
+int ultimoDireccion=0;
 String implementar(String llave, String valor){
   /**
    * La variable result puede cambiar para beneficio del desarrollador
@@ -370,23 +282,89 @@ String implementar(String llave, String valor){
     Serial.print("Move....: ");
     Serial.println(valor);
     //# AGREGAR PARA CÓDIGO PARA MOVER EL CARRO HACIA DELANTE Y ATRAS
+    if (valor.toInt()<0){
+      digitalWrite(In1, LOW);
+      digitalWrite(In2, HIGH);
+      analogWrite(EnA,valor.toInt()*-1);}
+    else{
+      digitalWrite(In1, HIGH);
+      digitalWrite(In2, LOW);
+      analogWrite(EnA,valor.toInt());
+      }
   }
  
   else if(llave == "dir"){
     switch (valor.toInt()){
       case 1:
         Serial.println("Girando derecha");
-        //# AGREGAR CÓDIGO PARA GIRAR DERECHA
+        if (ultimoDireccion==-1){
+          digitalWrite(In3, LOW);
+          digitalWrite(In4, HIGH);
+          delay(95);
+          digitalWrite(In3, LOW);
+          digitalWrite(In4, LOW);
+             
+        }
+        else{
+          digitalWrite(In3, LOW);
+          digitalWrite(In4, HIGH);
+          delay(53);
+          digitalWrite(In3, LOW);
+          digitalWrite(In4, LOW); 
+        }
+        ultimoDireccion=1;
         break;
       case -1:
         Serial.println("Girando izquierda");
         //# AGREGAR CÓDIGO PARA GIRAR IZQUIERDA
+        if (ultimoDireccion==1){
+          digitalWrite(In3, HIGH);
+          digitalWrite(In4, LOW);
+          delay(95);
+          digitalWrite(In3, LOW);
+          digitalWrite(In4, LOW);
+             
+        }
+        else{
+          digitalWrite(In3, HIGH);
+          digitalWrite(In4, LOW);
+          delay(53);
+          digitalWrite(In3, LOW);
+          digitalWrite(In4, LOW);
+        }
+        ultimoDireccion=-1;
         break;
        default:
         Serial.println("directo");
         //# AGREGAR CÓDIGO PARA NO GIRAR 
+        if (ultimoDireccion==1){
+          digitalWrite(In3, HIGH);
+          digitalWrite(In4, LOW);
+          delay(43);
+          digitalWrite(In3, LOW);
+          digitalWrite(In4, LOW);
+             
+        }
+        else if (ultimoDireccion==-1){
+          digitalWrite(In3, LOW);
+          digitalWrite(In4, HIGH);
+          delay(53);
+          digitalWrite(In3, LOW);
+          digitalWrite(In4, LOW);
+             
+        }
+        else{
+          digitalWrite(In3, LOW);
+          digitalWrite(In4, LOW);
+        }
+        ultimoDireccion=0;
         break;
     }
+  }
+  else if(llave == "mt"){
+    digitalWrite(In1, HIGH);
+    digitalWrite(In2, LOW);
+    analogWrite(EnA,valor.toInt());
   }
   else if(llave[0] == 'l'){
     Serial.println("Cambiando Luces");

@@ -9,6 +9,9 @@ from WiFiClient import NodeMCU
 
 class main():
     def __init__(self,master):
+        #Motor
+        self.motor=0
+
         #Atributos referentes a los botones (colores, iconos y estados)
         self.ledsBotton=[0,0,0,0]
         self.ledsHover=['#056EC3','#D20f00','#565351']
@@ -52,22 +55,22 @@ class main():
         self.MarchaSelect.place(x=375,y=430)
 
         #Cuadros con las velocidades (adelante, atrás, neutro)
-        self.AdelanteB = CTkButton(self.canvas, text="Adelante",command=lambda:self.setDirection("Adelante"),width=250,height=110,fg_color=self.ledsOff[2], hover=FALSE,compound=TOP,image=self.letraA)
+        self.AdelanteB = CTkButton(self.canvas, text="Adelante",command=lambda:self.setDirection("Adelante",1),width=250,height=110,fg_color=self.ledsOff[2], hover=FALSE,compound=TOP,image=self.letraA)
         self.AdelanteB.place(x=450,y=60)
-        self.AtrasB = CTkButton(self.canvas, text="Neutro",command=lambda:self.setDirection("Neutro"),width=250,height=110,fg_color=self.ledsOff[2], hover=FALSE,compound=TOP, image=self.letraN)
-        self.AtrasB.place(x=450,y=180)
-        self.StopB = CTkButton(self.canvas, text="Reversa",command=lambda:self.setDirection("Reversa"),width=250,height=110,fg_color=self.ledsOff[2], hover=FALSE,compound=TOP, image=self.letraR)
-        self.StopB.place(x=450,y=300)
+        self.StopB = CTkButton(self.canvas, text="Neutro",command=lambda:self.setDirection("Neutro",0),width=250,height=110,fg_color=self.ledsOff[2], hover=FALSE,compound=TOP, image=self.letraN)
+        self.StopB.place(x=450,y=180)
+        self.AtrasB = CTkButton(self.canvas, text="Reversa",command=lambda:self.setDirection("Reversa",-1),width=250,height=110,fg_color=self.ledsOff[2], hover=FALSE,compound=TOP, image=self.letraR)
+        self.AtrasB.place(x=450,y=300)
         #Direccion seleccionada de acuerdo a los botones anteriores
         self.SelectDir = CTkButton(self.canvas, text="Neutro",text_color="#DCEDFF",font=('CTkDefaultFont',24),width=250,height=50,fg_color="#9B1D20", hover=FALSE,compound=RIGHT)
         self.SelectDir.place(x=450,y=430)
 
         #Botones de direccion Direccion(iz1[-1],centro[0],der[1])
-        self.RuedaIzq = CTkButton(self.canvas, text="",command=self.ledSF,width=130,height=130,fg_color=self.ledsOff[2], hover=FALSE,compound=RIGHT,image=self.flechaIzq)
+        self.RuedaIzq = CTkButton(self.canvas, text="",command=lambda:self.doblar(-1),width=130,height=130,fg_color=self.ledsOff[2], hover=FALSE,compound=RIGHT,image=self.flechaIzq)
         self.RuedaIzq.place(x=350,y=500)
-        self.RuedaCent = CTkButton(self.canvas, text="",command=lambda:send("ruedacentral;"),width=130,height=130,fg_color=self.ledsOff[2], hover=FALSE,compound=RIGHT,image=self.volanteIco)
+        self.RuedaCent = CTkButton(self.canvas, text="",command=lambda:self.doblar(0),width=130,height=130,fg_color=self.ledsOff[2], hover=FALSE,compound=RIGHT,image=self.volanteIco)
         self.RuedaCent.place(x=485,y=500)
-        self.RuedaDer = CTkButton(self.canvas, text="",command=self.ledSF,width=130,height=130,fg_color=self.ledsOff[2], hover=FALSE,compound=RIGHT,image=self.flechaDer)
+        self.RuedaDer = CTkButton(self.canvas, text="",command=lambda:self.doblar(1),width=130,height=130,fg_color=self.ledsOff[2], hover=FALSE,compound=RIGHT,image=self.flechaDer)
         self.RuedaDer.place(x=620,y=500)
         
         #Luces Frentes (led0, pines: 5,6)
@@ -83,18 +86,17 @@ class main():
         self.ledsDI = CTkButton(self.canvas,text="",command=self.ledSDI,width=125,height=75,fg_color=self.ledsOff[2],hover=FALSE,image=self.dirIco[2])
         self.ledsDI.place(x=25,y=300)
           
-        #Direccional Der(pin:6)
+        #Direccional Der(pin:?)
         self.ledsDD = CTkButton(self.canvas,text="",command=self.ledSDD,width=125,height=75,fg_color=self.ledsOff[2],hover=FALSE,image=self.dirIco[0])
         self.ledsDD.place(x=150,y=300)
 
         #CONTROL MAESTRO LUCES
-        self.ledsALLON = CTkButton(self.canvas,text="",width=125,height=75,fg_color=self.ledsOff[2],hover=FALSE,image=self.ledsIco[0])
+        self.ledsALLON = CTkButton(self.canvas,text="",width=125,height=75,fg_color=self.ledsOff[2],hover=FALSE,image=self.ledsIco[1],command=lambda:send("ledson;"))
         self.ledsALLON.place(x=25,y=400)
-        self.ledsALLOFF = CTkButton(self.canvas,text="",width=125,height=75,fg_color=self.ledsOff[2],hover=FALSE,image=self.ledsIco[1])
+        self.ledsALLOFF = CTkButton(self.canvas,text="",width=125,height=75,fg_color=self.ledsOff[2],hover=FALSE,image=self.ledsIco[0],command=lambda:send("ledsoff;"))
         self.ledsALLOFF.place(x=150,y=400)
 
         #%Bateria
-        
         self.WidgetBatery = CTkButton(self.canvas, text="Bateria",command=self.indicadorSB,width=125,height=125,fg_color=self.ledsOff[2], hover=FALSE, image=self.batIcon,compound=TOP)
         self.WidgetBatery.place(x=150,y=500)
         #%Luz
@@ -159,8 +161,15 @@ class main():
         print("indicador luz")
     def setMarcha(self,v):
         self.MarchaSelect.configure(text=str(v))
-    def setDirection(self,v):
-        self.SelectDir.configure(text=str(v))
+        self.pwmv=v*self.motor
+        print(str(self.pwmv))
+        send("pwm:"+str(self.pwmv)+";")
+    def setDirection(self,d,v):
+        self.SelectDir.configure(text=str(d))
+        self.motor=v
+        
+    def doblar(self,v):
+        send("dir:"+str(v)+";")
     def updateLog(self,msg):
         self.logSpace.configure(text=str(msg))
         
