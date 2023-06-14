@@ -357,7 +357,7 @@ void procesar(String input, String * output){
     delComa = input.indexOf(';',comienzo);
   }
 }
-
+byte dataLeds=B00000000;
 String implementar(String llave, String valor){
   /**
    * La variable result puede cambiar para beneficio del desarrollador
@@ -392,25 +392,54 @@ String implementar(String llave, String valor){
     Serial.println("Cambiando Luces");
     Serial.print("valor luz: ");
     Serial.println(valor);
-    byte data = B00000000;
+
     //Recomendación utilizar operadores lógico de bit a bit (bitwise operators)
     switch (llave[1]){
       case 'f':
         Serial.println("Luces frontales");
         //# AGREGAR CÓDIGO PARA ENCENDER LUCES FRONTALES
-        data = B11110000;
+        switch (valor.toInt()){
+          case 1:
+            dataLeds=dataLeds|B00001100;
+            break;
+          case 0:
+            dataLeds=dataLeds & B11110011;
+            break;
+          };
         break;
       case 'b':
-        Serial.println("Luces traseras");
-        //# AGREGAR CÓDIGO PARA ENCENDER O APAGAR LUCES TRASERAS
+        switch (valor.toInt()){
+          case 1:
+            dataLeds=dataLeds|B11000000;
+            break;
+          case 0:
+            dataLeds=dataLeds & B00111111;
+            break;
+          };
         break;
       case 'l':
         Serial.println("Luces izquierda");
         //# AGREGAR CÓDIGO PARA ENCENDER O APAGAR DIRECCIONAL IZQUIERDA
+        switch (valor.toInt()){
+          case 1:
+            dataLeds=dataLeds|B00100000;
+            break;
+          case 0:
+            dataLeds=dataLeds & B11011111;
+            break;
+          };
         break;
       case 'r':
         Serial.println("Luces derechas");
         //# AGREGAR PARA CÓDIGO PARA ENCENDER O APAGAR DIRECCIONAL DERECHA
+        switch (valor.toInt()){
+          case 1:
+            dataLeds=dataLeds|B00010000;
+            break;
+          case 0:
+            dataLeds=dataLeds & B11101111;
+            break;
+          };
         break;
       /**
        * # AGREGAR CASOS CON EL FORMATO l[caracter]:valor;
@@ -422,7 +451,7 @@ String implementar(String llave, String valor){
         break;
     }
     //data VARIABLE QUE DEFINE CUALES LUCES SE ENCIENDEN Y CUALES SE APAGAN
-    shiftOut(ab, clk, LSBFIRST, data);
+    shiftOut(ab, clk, LSBFIRST, ~dataLeds);
   }
   /**
    * El comando tiene el formato correcto pero no tiene sentido para el servidor
