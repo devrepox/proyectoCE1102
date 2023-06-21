@@ -540,5 +540,5 @@ String getSense(){
   sprintf(sense, "blvl: %.2f'%' ;ldr: %.2f'%';", batteryLvl, light);
   Serial.print("Sensing: ");
   Serial.println(sense);
-  return String(luz);
+  return sense;
 }
